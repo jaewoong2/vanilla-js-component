@@ -1,23 +1,53 @@
-import "./style.css";
-import javascriptLogo from "./javascript.svg";
-import { setupCounter } from "./counter.js";
+// import { App } from "./src/App.js";
+import { mounted, render, useState } from "./src/core/index.js";
 
-document.querySelector("#app").innerHTML = `
+// new App(document.querySelector("#app"));
+
+render(document.querySelector("#app"), () => {
+  const [count, setCount] = useState(42);
+  const [obj, setObj] = useState({ b: "1234" });
+
+  return `
   <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
+    helloWorld ${count}
+    ${IncreaseButton({ count, setCount })}
   </div>
-`;
+  `;
+});
 
-setupCounter(document.querySelector("#counter"));
+const IncreaseButton = ({ ...props }) => {
+  const onClickButton = () => {
+    props.setCount(props.count + 1);
+  };
+
+  mounted(() => {
+    document
+      .querySelector("#increase-btn")
+      .addEventListener("click", onClickButton);
+  });
+
+  return `
+  <div>
+    <div>
+      <button id="increase-btn">increase</button>
+      ${decreaseButton(props)}
+    </div>
+  </div>
+  `;
+};
+
+const decreaseButton = ({ ...props }) => {
+  const onClickButton = () => {
+    props.setCount(props.count - 1);
+  };
+
+  mounted(() => {
+    document
+      .querySelector("#decrease-btn")
+      ?.addEventListener("click", onClickButton);
+  });
+
+  return `
+    <button id="decrease-btn">decrease</button>
+  `;
+};
